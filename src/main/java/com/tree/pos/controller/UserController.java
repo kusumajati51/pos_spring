@@ -20,8 +20,6 @@ public class UserController {
     @Autowired 
     UserService userService;
 
-   
-
     BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 
     @GetMapping("/employees")
