@@ -14,7 +14,6 @@ import javax.validation.ConstraintValidatorContext;
 
 import com.tree.pos.validators.anotation.ValidPassword;
 
-import org.hibernate.validator.internal.engine.messageinterpolation.parser.MessageState;
 import org.passay.*;
 
 public class PasswordConstraintValidator implements ConstraintValidator<ValidPassword, String> {
@@ -47,7 +46,8 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
             String messageTemplate = messages.iterator().next();
             context.buildConstraintViolationWithTemplate(messageTemplate)
                     .addConstraintViolation()
-                    .disableDefaultConstraintViolation();        }
+                    .disableDefaultConstraintViolation();     
+        }
        
         return result.isValid();
     }

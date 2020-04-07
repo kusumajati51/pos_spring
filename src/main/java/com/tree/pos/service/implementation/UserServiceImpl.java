@@ -1,6 +1,5 @@
 package com.tree.pos.service.implementation;
 
-
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,8 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tree.pos.model.User;
 import com.tree.pos.repository.UserRepositoryJpa;
 import com.tree.pos.service.model.UserService;
+import com.tree.pos.validators.intrefaces.CobaSalah;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Service;
 
@@ -54,4 +55,9 @@ public class UserServiceImpl implements UserService {
         return user.getConfrimPassword().equals(user.getPassword());
     }
     
+    @Override
+    public String bingung() {
+        // TODO Auto-generated method stub
+        return "{ \"gak\" : \"tau\" }";
+    }
 }
