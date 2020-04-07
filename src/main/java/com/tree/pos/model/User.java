@@ -33,7 +33,7 @@ public class User implements Serializable {
     private String name;
 
     @SerializedName("email")
-    @NotEmpty(message = "{Please provide a email}")
+    @NotEmpty(message = "Please provide a email")
     @Expose
     @Unique(service = UserService.class, fieldName = "email", message = "this email has been taken")
     private String email;
@@ -44,9 +44,9 @@ public class User implements Serializable {
     @ValidPassword
     private String password;
 
-    // @Transient
-    // @NotEmpty(message = "Please Reapet your password")
-    // private String confrimPassword;
+    @Transient
+    @NotEmpty(message = "Please Reapet your password")
+    private String confrimPassword;
 
 
     public long getId() {
@@ -83,13 +83,13 @@ public class User implements Serializable {
     }
 
 
-    // public String getConfrimPassword() {
-    //     return this.confrimPassword;
-    // }
+    public String getConfrimPassword() {
+        return this.confrimPassword;
+    }
 
-    // public void setConfrimPassword(String confrimPassword) {
-    //     this.confrimPassword = confrimPassword;
-    // }
+    public void setConfrimPassword(String confrimPassword) {
+        this.confrimPassword = confrimPassword;
+    }
 
     
     @Override

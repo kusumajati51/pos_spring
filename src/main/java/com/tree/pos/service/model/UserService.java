@@ -12,4 +12,5 @@ public interface UserService extends FieldValueExists {
     void save(User user);
     User findByName(String name);
     User findByEmail(String email);
+    boolean checkingConfirmPassword(User user);
 }

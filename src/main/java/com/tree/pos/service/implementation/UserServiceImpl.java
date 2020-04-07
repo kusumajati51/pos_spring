@@ -49,6 +49,9 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(value.toString()) != null;
     }
 
-
+    @Override
+    public boolean checkingConfirmPassword(User user) {
+        return user.getConfrimPassword().equals(user.getPassword());
+    }
     
 }
