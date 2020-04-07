@@ -22,7 +22,7 @@ public class UserController {
 
     BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 
-    @GetMapping("/employees")
+    @GetMapping("/")
     @ResponseBody public String all() {
       return "loha loha";
     }
