@@ -55,7 +55,7 @@ public class User  {
     @NotEmpty(message = "Please Reapet your password")
     private String confirmPassword;
 
-    @SerializedName("confirmation_password")
+    @SerializedName("phoneNumber")
     @NotEmpty(message = "Please provide your Phone number")
     @Pattern(regexp = "(\\+62|0)[0-9]{9,10}", message = "Your Phone Number Wrong Format")
     private String phoneNumber;
