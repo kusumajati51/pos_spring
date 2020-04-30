@@ -4,14 +4,17 @@ import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+
 import com.tree.pos.model.User;
 import com.tree.pos.repository.UserRepositoryJpa;
 import com.tree.pos.service.model.UserService;
-import com.tree.pos.validators.intrefaces.CobaSalah;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service("userServiceImpl")
@@ -50,14 +53,22 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(value.toString()) != null;
     }
 
-    @Override
-    public boolean checkingConfirmPassword(User user) {
-        return user.getConfrimPassword().equals(user.getPassword());
-    }
+
     
     @Override
-    public String bingung() {
-        // TODO Auto-generated method stub
-        return "{ \"gak\" : \"tau\" }";
+    public boolean match(Object object) {
+        User user = (User) object;  
+        return user.getPassword()
+                   .equals(user.getConfrimPassword());      
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email);
+        if(user == null){
+            throw new UsernameNotFoundException("User not found with email " + email);
+        }
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), 
+                   user.getPassword(), new ArrayList<>());
     }
 }

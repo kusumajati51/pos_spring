@@ -2,15 +2,17 @@ package com.tree.pos.controller;
 
 import javax.validation.Valid;
 
+import com.google.gson.Gson;
 import com.tree.pos.model.User;
 import com.tree.pos.service.model.UserService;
 import com.tree.pos.validators.custom.UniqueValidatorUserEmail;
-import com.tree.pos.validators.intrefaces.CobaSalah;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +22,10 @@ public class UserController {
     @Autowired 
     UserService userService;
 
-    BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+    @Autowired
+    private PasswordEncoder bcryptEncoder;
+    
+    Gson gson = new Gson();
 
     @GetMapping("/")
     @ResponseBody public String all() {
@@ -30,10 +35,13 @@ public class UserController {
     @PostMapping(path = "/add")
     @ResponseStatus(HttpStatus.OK)
     @Transactional
-    public @ResponseBody String addUser(@Valid @RequestBody final User user){
-        user.setPassword(bcrypt.encode(user.getPassword()));
+    public @ResponseBody String addUser(@Valid @RequestBody final User user)throws JSONException {
+        JSONObject json;
+        user.setPassword(bcryptEncoder.encode(user.getPassword()));
         userService.save(user);
-        return user.toString();
+        json = new JSONObject(gson.toJson(user));
+        // json.remove("confirmPassword");
+        return json.toString();
 
     } 
 }

@@ -1,23 +1,26 @@
 package com.tree.pos.validators.constraint;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
-import java.util.stream.Collectors;
+
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import com.tree.pos.validators.anotation.ValidPassword;
+import com.tree.pos.validators.intrefaces.FieldValueConfirmation;
 
 import org.passay.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class PasswordConstraintValidator implements ConstraintValidator<ValidPassword, String> {
 
+
+    @Autowired
+    private FieldValueConfirmation confirmation;
+
+   
 
     @Override
     public boolean isValid( String value,  ConstraintValidatorContext context) {
@@ -48,6 +51,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
                     .addConstraintViolation()
                     .disableDefaultConstraintViolation();     
         }
+
        
         return result.isValid();
     }

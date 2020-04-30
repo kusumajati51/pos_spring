@@ -10,7 +10,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 
-import org.json.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +34,6 @@ public class GlobalException extends ResponseEntityExceptionHandler{
             Map<String,Object> body = new LinkedHashMap<>();
             Map<String, Object> subBody = new HashMap<>();
             body.put("timestamp", new Date());
-
             body.put("status", status.value());
             List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
             for(FieldError fieldError : fieldErrors){
