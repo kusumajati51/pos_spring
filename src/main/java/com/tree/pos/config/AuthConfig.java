@@ -1,7 +1,9 @@
 package com.tree.pos.config;
 
 import com.tree.pos.auth.token.*;
-
+import com.tree.pos.auth.token.handler.RestAccessDeniedHandler;
+import com.tree.pos.auth.token.handler.RestAuthenticationEntryPoint;
+import com.tree.pos.auth.token.handler.RestAuthenticationFailureHandler;
 import com.tree.pos.service.model.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,9 +15,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 
 
 @Configuration     
@@ -56,8 +61,25 @@ public class AuthConfig extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests().antMatchers("/login", "/register")
             .permitAll().anyRequest().authenticated().and()
-            .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
-            .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+            .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        // http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
+
+  
+    @Bean
+    RestAccessDeniedHandler accessDeniedHandler(){
+        return new RestAccessDeniedHandler();
+    }
+
+    @Bean
+    RestAuthenticationEntryPoint authenticationEntryPoint(){
+        return new RestAuthenticationEntryPoint();
+    }
+
+    @Bean
+    RestAuthenticationFailureHandler authenticationFailureHandler(){
+        return new RestAuthenticationFailureHandler();
+    }
+
 }

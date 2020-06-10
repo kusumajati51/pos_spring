@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
         if(!fieldName.equals("email")){
             throw new UnsupportedOperationException("");
         }
-
+        
         if(value == null){
             return false;
         }

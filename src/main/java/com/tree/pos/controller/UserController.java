@@ -13,6 +13,7 @@ import com.tree.pos.validators.custom.UniqueValidatorUserEmail;
 import org.apache.catalina.authenticator.SpnegoAuthenticator.AuthenticateAction;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.omg.CORBA.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -50,10 +52,11 @@ public class UserController {
 
     @PostMapping(path = "/login")
     public ResponseEntity<?> login(@RequestBody Login login) throws Exception{
-      authenticate(login.getEmail(), login.getPassword());
-      final UserDetails userDetails = userService.loadUserByUsername(login.getEmail());
-      final String token = jwtTokenUtil.generatedToken(userDetails);
-      return ResponseEntity.ok(new Token(token));
+        Login makeSure = new Login(login.getEmail(), login.getPassword());
+        authenticate(makeSure.getEmail(), makeSure.getPassword());
+        final UserDetails userDetails = userService.loadUserByUsername(login.getEmail());
+        final String token = jwtTokenUtil.generatedToken(userDetails);
+        return ResponseEntity.ok(new Token(token));
     }
 
     @PostMapping(path = "/register")
@@ -71,10 +74,18 @@ public class UserController {
 
     private void authenticate(String email, String password) throws Exception{
         try{
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+            User user = userService.findByEmail(email);
+            if(user != null){
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));    
+            }else{
+                throw new UsernameNotFoundException("Email not registered");
+            }
         }catch(DisabledException e){
             throw new Exception("USER_DISABLED", e);
-        }catch(BadCredentialsException e){
+        }
+        catch(BadCredentialsException e){
+            throw new BadCredentialsException("You're password is wrong");
+        } catch(UsernameNotFoundException e){
             throw new Exception("INVALID_CREDENTIALS",e);
         }
     }
